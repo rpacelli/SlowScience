@@ -447,31 +447,29 @@ header {
 .involved-card.sign-manifesto {
     flex: 0 0 40%; /* 2/5 = 40% */
     max-width: 40%;
-    min-height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 40px;
-    margin-right: 0; /* Reset margin since gap handles spacing */
-    background-color: transparent;
-    box-shadow: none; /* Remove shadow since background is transparent */
+    background-color: white;
+    box-shadow: none;
 }
 
 /* Adjust involved-card2 to take remaining 3/5 (60%) */
 .involved-card2 {
-    flex: 0 0 calc(60% - 30px); /* 3/5 = 60%, minus the gap */
+    flex: 0 0 calc(60% - 30px); /* 3/5 = 60%, minus gap */
     max-width: calc(60% - 30px);
-    min-width: auto; /* Remove the fixed 600px */
-    justify-content: center;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 30px;
+    background-color: white;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    transition: var(--transition);
 }
 
 .involved-card {
@@ -743,6 +741,7 @@ footer {
     font-size: 3.5rem;
     font-weight: 700;
     line-height: 1;
+    min-width: 80px; /* Fixed width ensures alignment */
 }
 
 .stats-text h3 {
