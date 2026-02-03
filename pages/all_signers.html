@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Signers - Slow Science Movement</title>
+    <style>
+        :root {
+            --primary-color: #2c5530;
+            --secondary-color: #4a7c59;
+            --accent-color: #8fbc8f;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --text-color: #333;
+            --light-text: #f8f9fa;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            color: var(--primary-color);
+        }
+        h1 {
+            color: #2c5530;
+            margin-bottom: 30px;
+        }
+        .signers-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .signers-table th {
+            background-color: #2c5530;
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+        }
+        .signers-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .signers-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .promoter-row {
+            background-color: #f0f7f0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← Back to Slow Science Movement</a>
+        
+        <h1 id="page-title">All Signers</h1>
+        
+        <div id="loading">Loading...</div>
+        <div id="content" style="display: none;">
+            <table class="signers-table">
+                <thead>
+                    <tr id="table-header">
+                        <!-- Header will be populated by JavaScript -->
+                    </tr>
+                </thead>
+                <tbody id="signers-body">
+                    <!-- Content will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Get type from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type') || 'researchers';
+        
+        // API URLs
+        const SIGNERS_API_URL = 'https://script.google.com/macros/s/AKfycbzYeyYhf3U1OPiC14b0c8dgiYdAM_o-AmnuX8s00TghSGZXS3bB9IOtkdZcIsmghqIS/exec';
+        const INSTITUTIONS_API_URL = 'https://script.google.com/macros/s/AKfycbwF3ekFg3Ogv1jgeX1L_UFv1VwOXnOxg9lANHholkbYW8QLSA2CeZ84WVZv3u1SRPIu/exec';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllSigners();
+        });
+        
+        async function loadAllSigners() {
+            const apiUrl = type === 'researchers' ? SIGNERS_API_URL : INSTITUTIONS_API_URL;
+            const pageTitle = document.getElementById('page-title');
+            
+            if (type === 'researchers') {
+                pageTitle.textContent = 'All Researchers & Academics';
+            } else {
+                pageTitle.textContent = 'All Institutions';
+            }
+            
+            try {
+                const response = await fetch(apiUrl + '?t=' + Date.now());
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayAllSigners(data);
+                } else {
+                    throw new Error('Failed to load data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').innerHTML = '<p>Error loading data. Please try again later.</p>';
+            }
+        }
+        
+        function displayAllSigners(data) {
+            const loadingDiv = document.getElementById('loading');
+            const contentDiv = document.getElementById('content');
+            const tableHeader = document.getElementById('table-header');
+            const signersBody = document.getElementById('signers-body');
+            
+            loadingDiv.style.display = 'none';
+            contentDiv.style.display = 'block';
+            
+            if (type === 'researchers') {
+                tableHeader.innerHTML = `
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Affiliation</th>
+                    <th>Country</th>
+                `;
+                
+                data.signers.forEach((signer, index) => {
+                    const row = document.createElement('tr');
+                    const rowNumber = index < 11 ? 1 : index + 1;
+                    
+                    row.innerHTML = `
+                        <td>${rowNumber}</td>
+                        <td>${escapeHtml(signer.name)} ${escapeHtml(signer.surname)}</td>
+                        <td>${escapeHtml(signer.institution)}</td>
+                        <td>${escapeHtml(signer.country)}</td>
+                    `;
+                    
+                    if (index < 11) {
+                        row.classList.add('promoter-row');
+                    }
+                    
+                    signersBody.appendChild(row);
+                });
+            } else {
+                tableHeader.innerHTML = `
+                    <th>#</th>
+                    <th>Institution Name</th>
+                    <th>Represented by</th>
+                `;
+                
+                data.signers.forEach((institution, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${escapeHtml(institution.name)}</td>
+                        <td>${escapeHtml(institution.type || 'Institution')}</td>
+                    `;
+                    signersBody.appendChild(row);
+                });
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

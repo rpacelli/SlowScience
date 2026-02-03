@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign the Slow Science Manifesto - Individual</title>
+    <link rel="stylesheet" href="styles_secondary.css">
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Slow Science Movement</a>
+        
+        <h1>Sign the Slow Science Manifesto</h1>
+        <p class="subtitle">Join our community of researchers advocating for thoughtful, sustainable scientific practices</p>
+        
+        <div id="successMessage" class="success-message">
+            <h3>Thank you for signing!</h3>
+            <p>Your signature has been recorded. You'll receive a confirmation email shortly.</p>
+            <a href="../index.html">Return to main page</a>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Submitting your signature...</p>
+        </div>
+        
+        <form id="signatureForm" class="form-container">
+            <div class="form-group">
+                <label for="firstName" class="required">First Name(s)</label>
+                <input type="text" id="firstName" name="firstName" required>
+                <div class="error-message" id="firstNameError">Please enter your first name</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastName" class="required">Last Name(s)</label>
+                <input type="text" id="lastName" name="lastName" required>
+                <div class="error-message" id="lastNameError">Please enter your last name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="affiliationType" class="required">Affiliation Type</label>
+                <select id="affiliationType" name="affiliationType" required>
+                    <option value="">Select Type</option>
+                    <option value="University">University</option>
+                    <option value="Research Center">Research Institution/Center</option>
+                    <option value="Government Agency">Government Agency</option>
+                    <option value="Non-profit">Non-profit Organization</option>
+                    <option value="Journal">Journal</option>
+                    <option value="Publisher">Publisher</option>
+                    <option value="Industry">Industry/Corporate</option>
+                    <option value="Independent">Independent Researcher</option>
+                </select>
+                <div class="error-message" id="affiliationTypeError">Please select affiliation type</div>
+            </div>
+
+            <div class="form-group">
+                <label for="institution" class="required">Affiliation</label>
+                <input type="text" id="institution" name="institution" required>
+                <div class="error-message" id="institutionError">Please enter your institution, organization or company </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="required">Email Address (preferably institutional)</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="jobTitle" class="required">Job Title/Role</label>
+                <input type="text" id="jobTitle" name="jobTitle" required>
+                <div class="error-message" id="jobTitleError">Please enter your job title</div>
+            </div>
+
+            <div class="form-group">
+                <label for="country" class="required">Country</label>
+                <select id="country" name="country" required>
+                </select>
+                <div class="error-message" id="countryError">Please select your country</div>
+            </div>
+
+            <div class="form-group">
+                <label for="verificationLink" class="required">Verification link</label>
+                <div class="help-text">Please provide a link that testifies your role at your institution or as independent researcher. Examples: goolge scholar profile, ORCHID profile, personal website, staff page, etc.</div>
+                <input type="url" id="verificationLink" name="verificationLink" required placeholder="https://">
+                <div class="error-message" id="verificationLinkError">Please provide a verification link</div>
+            </div>
+
+            <!-- CAPTCHA Section -->
+            <div class="captcha-container">
+                <label for="captchaInput" class="required">Human Verification</label>
+                <div class="captcha-text" id="captchaText">ABCD</div>
+                <input type="text" id="captchaInput" placeholder="Enter the text above" required>
+                <button type="button" class="captcha-refresh" id="refreshCaptcha">↻ Refresh CAPTCHA</button>
+                <div class="error-message" id="captchaError">Please enter the correct CAPTCHA text</div>
+            </div>
+
+            <div class="checkbox-group">
+                <h3>Declaration and Consent</h3>
+                <p>By checking this box, you can proceed to sign the Slow Science Manifesto and understand that you are agreeing that:</p>
+                
+                <div class="checkbox-item">
+                    <input type="checkbox" id="declaration1" name="declaration1" required>
+                    <label for="declaration1">
+                        I am the person whose name is entered above.
+                    </label>
+                </div>
+                
+                <div class="checkbox-item">
+                    <input type="checkbox" id="declaration2" name="declaration2" required>
+                    <label for="declaration2">By signing as an individual, I authorize the Slow Science Movement to publicly display my name, affiliation, and/or country as a signer of the Slow Science Manifesto.
+</label>
+                </div>
+                
+                <div class="checkbox-item">
+                    <input type="checkbox" id="declaration3" name="declaration3">
+                    <label for="declaration3">
+                        <div> <strong> I want to become an active member of the Slow Science Movement. </strong> <br> As an active member, you can have a direct say in our direction by attending meetings and voting on future initiatives. </div>
+                        <div class="subscription-email" id="subscriptionEmailContainer">
+                            <label for="subscriptionEmail" style="font-weight: normal; margin-top: 10px;">
+                                Email for future communication as active member (optional, different from above):
+                            </label>
+                            <input type="email" id="subscriptionEmail" name="subscriptionEmail" placeholder="Enter email">
+                            <div class="error-message" id="subscriptionEmailError">Please enter a valid email address</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn">Sign the Manifesto</button>
+        </form>
+    </div>
+
+<script>
+    // IMPORTANT: Replace this with your deployed Google Apps Script URL for WRITING
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwBo6_eFDttWK655zGOGYOGWvgAuYiYM0T9nYoZdx1HDA3RPRctutSz7X6FdKli1KkD/exec"; // write individuals API
+    const MAILING_LIST_URL = "https://script.google.com/macros/s/AKfycbzNyDggZR99ZkP1q-iAYPfWz3RQgzWUF8F37LF0ATl2WPrlg1UfR7-pL08kZOBFqWivfw/exec"; // You'll create this
+    const ACTIVE_MEMBERS_URL = "https://script.google.com/macros/s/AKfycbyFe1mGkpReim8EHzB1WJtnXQoHTz6nOeot61MRQI_uIoyGewNl2VFeQP3Ky_oQoA_Y/exec"
+    
+    // CAPTCHA functions
+    function generateCaptcha() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+        let captcha = '';
+        for (let i = 0; i < 6; i++) {
+            captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        sessionStorage.setItem('captcha', captcha);
+        return captcha;
+    }
+
+    function displayCaptcha() {
+        const captcha = generateCaptcha();
+        document.getElementById('captchaText').textContent = captcha;
+        document.getElementById('captchaInput').value = '';
+        document.getElementById('captchaError').style.display = 'none';
+    }
+
+    function validateCaptcha(input) {
+        const storedCaptcha = sessionStorage.getItem('captcha');
+        if (!storedCaptcha) return false;
+        return input.toLowerCase() === storedCaptcha.toLowerCase();
+    }
+
+    // Toggle subscription email field
+    document.getElementById('declaration3').addEventListener('change', function() {
+        const emailContainer = document.getElementById('subscriptionEmailContainer');
+        if (this.checked) {
+            emailContainer.classList.add('active');
+            // Pre-fill with institutional email if empty
+            const subscriptionEmailField = document.getElementById('subscriptionEmail');
+            const institutionalEmail = document.getElementById('email').value;
+            if (!subscriptionEmailField.value.trim() && institutionalEmail) {
+                subscriptionEmailField.value = institutionalEmail;
+            }
+        } else {
+            emailContainer.classList.remove('active');
+        }
+    });
+
+    // Main form submission
+    document.getElementById('signatureForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        console.log('Form submission started');
+
+        // Clear previous errors
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'none';
+        });
+
+        // Validate form
+        if (!validateForm()) {
+            console.log('Form validation failed');
+            return;
+        }
+
+        // Validate CAPTCHA
+        const captchaInput = document.getElementById('captchaInput').value;
+        if (!validateCaptcha(captchaInput)) {
+            document.getElementById('captchaError').style.display = 'block';
+            document.getElementById('captchaError').textContent = 'Please enter the correct CAPTCHA text';
+            document.getElementById('captchaInput').focus();
+            displayCaptcha(); // Generate new CAPTCHA
+            return;
+        }
+
+        // Show loading, hide form
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('signatureForm').style.display = 'none';
+        document.getElementById('submitBtn').disabled = true;
+
+        // Collect form data for main signature
+        const formData = new URLSearchParams();
+        formData.append('firstName', document.getElementById('firstName').value.trim());
+        formData.append('lastName', document.getElementById('lastName').value.trim());
+        formData.append('affiliationType', document.getElementById('affiliationType').value);
+        formData.append('institution', document.getElementById('institution').value.trim());
+        formData.append('email', document.getElementById('email').value.trim());
+        formData.append('jobTitle', document.getElementById('jobTitle').value.trim());
+        formData.append('country', document.getElementById('country').value);
+        formData.append('declaration1', document.getElementById('declaration1').checked.toString());
+        formData.append('declaration2', document.getElementById('declaration2').checked.toString());
+        formData.append('declaration3', document.getElementById('declaration3').checked.toString());
+        formData.append('captcha', captchaInput);
+        formData.append('timestamp', new Date().toISOString());
+        formData.append('type', 'individual');
+        formData.append('source', 'website_form');
+        formData.append('verification_url', document.getElementById('verificationLink').value);
+
+        console.log('Submitting signature data...');
+
+        try {
+            // 1. Send main signature data
+            const signatureResponse = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            });
+
+            const signatureResult = await signatureResponse.json();
+            console.log('Signature response:', signatureResult);
+
+            if (!signatureResult.success) {
+                throw new Error(signatureResult.message || signatureResult.error || 'Signature submission failed');
+            }
+
+            // 2. If successful AND user wants mailing list subscription
+            if (signatureResult.success && document.getElementById('declaration3').checked) {
+                try {
+                    // Determine which email to use
+                    let mailingListEmail = document.getElementById('subscriptionEmail').value.trim();
+
+                    // If separate email field is empty, use institutional email
+                    if (!mailingListEmail) {
+                        mailingListEmail = document.getElementById('email').value.trim();
+                    }
+
+                    if (mailingListEmail) {
+                        console.log('Adding to mailing list:', mailingListEmail);
+
+                        const mailingListData = new URLSearchParams();
+                        mailingListData.append('email', mailingListEmail);
+                        mailingListData.append('firstName', document.getElementById('firstName').value.trim());
+                        mailingListData.append('lastName', document.getElementById('lastName').value.trim());
+                        mailingListData.append('institution', document.getElementById('institution').value.trim());
+                        mailingListData.append('country', document.getElementById('country').value);
+                        mailingListData.append('jobTitle', document.getElementById('jobTitle').value.trim());
+                        mailingListData.append('source', 'manifesto_signup');
+                        mailingListData.append('timestamp', new Date().toISOString());
+
+                        const mailingResponse = await fetch(ACTIVE_MEMBERS_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: mailingListData.toString()
+                        });
+
+                        const mailingResult = await mailingResponse.json();
+                        console.log('Mailing list response:', mailingResult);
+
+                        if (!mailingResult.success) {
+                            console.warn('Mailing list addition warning:', mailingResult.message);
+                        }
+                    }
+                } catch (mailingError) {
+                    console.warn('Mailing list error (non-fatal):', mailingError);
+                    // Don't fail the main submission
+                }
+            }
+
+            // 3. Show success message
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Reset form
+            document.getElementById('signatureForm').reset();
+            displayCaptcha(); // Generate new CAPTCHA
+            document.getElementById('subscriptionEmailContainer').classList.remove('active');
+
+        } catch (error) {
+            console.error('Submission error:', error);
+
+            // Hide loading, show form again
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('signatureForm').style.display = 'block';
+            document.getElementById('submitBtn').disabled = false;
+
+            // Show error message
+            const errorMessage = `
+                <div style="background-color: #ffebee; color: #c62828; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                    <p><strong>Error submitting form:</strong> ${error.message}</p>
+                    <p>Please try again or contact us at info@slow-science.com</p>
+                    <button onclick="location.reload()" style="margin-top: 10px; padding: 10px 20px; background: #2c5530; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Try Again
+                    </button>
+                </div>
+            `;
+
+            // Remove any existing error message
+            const existingError = document.querySelector('.container > .error-message:not(#firstNameError):not(#lastNameError):not(#emailError):not(#captchaError)');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            // Insert new error message
+            document.querySelector('.container').insertAdjacentHTML('afterbegin', errorMessage);
+
+            // Generate new CAPTCHA
+            displayCaptcha();
+        }
+    });
+
+    function validateForm() {
+        let isValid = true;
+
+        // Required fields
+        const requiredFields = [
+            { id: 'firstName', name: 'First Name' },
+            { id: 'lastName', name: 'Last Name' },
+            { id: 'institution', name: 'Institution' },
+            { id: 'email', name: 'Email' },
+            { id: 'jobTitle', name: 'Job Title' },
+            { id: 'country', name: 'Country' },
+            { id: 'affiliationType', name: 'Affiliation Type' }
+        ];
+
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (!element.value.trim()) {
+                const errorElement = document.getElementById(`${field.id}Error`);
+                errorElement.textContent = `Please enter your ${field.name.toLowerCase()}`;
+                errorElement.style.display = 'block';
+                isValid = false;
+            }
+        });
+
+        // Email validation
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            document.getElementById('emailError').textContent = 'Please enter a valid email address';
+            document.getElementById('emailError').style.display = 'block';
+            isValid = false;
+        }
+
+        // Subscription email validation (if provided)
+        const subscriptionEmail = document.getElementById('subscriptionEmail').value;
+        if (subscriptionEmail && !emailRegex.test(subscriptionEmail)) {
+            document.getElementById('subscriptionEmailError').textContent = 'Please enter a valid email address';
+            document.getElementById('subscriptionEmailError').style.display = 'block';
+            isValid = false;
+        }
+
+        // CAPTCHA validation
+        const captchaInput = document.getElementById('captchaInput').value;
+        if (!captchaInput.trim()) {
+            document.getElementById('captchaError').textContent = 'Please enter the CAPTCHA text';
+            document.getElementById('captchaError').style.display = 'block';
+            isValid = false;
+        }
+
+        // Check required checkboxes
+        if (!document.getElementById('declaration1').checked || !document.getElementById('declaration2').checked) {
+            alert('Please accept all required declarations.');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCountries();
+        displayCaptcha();
+
+        // Refresh CAPTCHA button
+        document.getElementById('refreshCaptcha').addEventListener('click', displayCaptcha);
+    });
+    </script>
+
+    <script>
+        // Load countries function (unchanged)
+        function loadCountries() {
+            const countrySelect = document.getElementById('country');
+            countrySelect.innerHTML = '<option value="">Select your country</option>';
+
+            fetch('country_list.html')
+                .then(response => {
+                    if (!response.ok) throw new Error('Cannot load country list');
+                    return response.text();
+                })
+                .then(html => {
+                    countrySelect.innerHTML += html;
+                    console.log('Loaded countries:', countrySelect.options.length - 1);
+                })
+                .catch(error => {
+                    console.error('Failed to load countries:', error);
+                    const shortList = [
+                        "Australia", "Austria", "Belgium", "Brazil", "Canada",
+                        "China", "Denmark", "Finland", "France", "Germany",
+                        "India", "Ireland", "Italy", "Japan", "Mexico",
+                        "Netherlands", "New Zealand", "Norway", "Portugal", "Russia",
+                        "South Africa", "South Korea", "Spain", "Sweden", "Switzerland",
+                        "United Kingdom (UK)", "United States of America (USA)"
+                    ].sort();
+
+                    shortList.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country;
+                        option.textContent = country;
+                        countrySelect.appendChild(option);
+                    });
+                });
+        }
+    </script>
+
+</body>
+</html>
