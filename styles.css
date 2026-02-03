@@ -435,6 +435,43 @@ header {
     gap: 30px;
 }
 
+/* Get Involved Section - Adjustments for 2/5 width layout */
+.involved-row2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: stretch; /* Make cards equal height */
+}
+
+/* First row specific styles - make sign-manifesto card 2/5 width */
+.involved-card.sign-manifesto {
+    flex: 0 0 40%; /* 2/5 = 40% */
+    max-width: 40%;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    margin-right: 0; /* Reset margin since gap handles spacing */
+}
+
+/* Adjust involved-card2 to take remaining 3/5 (60%) */
+.involved-card2 {
+    flex: 0 0 calc(60% - 30px); /* 3/5 = 60%, minus the gap */
+    max-width: calc(60% - 30px);
+    min-width: auto; /* Remove the fixed 600px */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
 .involved-card {
     background-color: white;
     padding: 30px;
@@ -448,8 +485,7 @@ header {
 }
 
 .involved-card.sign-manifesto {
-    grid-column: 1 / -1;
-    display: flex;
+    max-width: 400px;
     flex-direction: row; /* Changed from column to row */
     align-items: center; /* Center vertically */
     justify-content: flex-start; /* Align items to the start */

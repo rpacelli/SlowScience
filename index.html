@@ -145,11 +145,11 @@
                         <div class="manifesto-buttons">
                             <a href="pages/manifesto.html" class="btn btn-manifesto btn-outline">
                                 <span class="btn-icon">📖</span>
-                                Read full Manifesto
+                                Read our Manifesto
                             </a>
                             <a href="documents/slow_science_manifesto_2026.pdf" class="btn btn-manifesto btn-outline" download>
                                 <span class="btn-icon">📥</span>
-                                Download pdf version
+                                Download pdf
                             </a>
                         </div>
                     </div>
@@ -165,13 +165,14 @@
             <!--<p>Join our growing community of researchers and academics working for ethical, collaborative and sustainable research practices.</p>
             
             Newsletter Subscription -->
-
             
             <div class="involved-options">
                 <!-- First row: Only the Sign Manifesto card -->
-                <div class="involved-row">
+                <div class="involved-row2">
                     <div class="involved-card sign-manifesto">
                         <h3><a href="pages/sign_individual.html" class="btn">Sign The Manifesto</a></h3>
+                    </div>
+                    <div class="involved-card2">
                         <p>If you represent an institution (a research department, lab or company) <br> <strong> ↬ <a href="pages/sign_institution.html">Sign as Institution</strong></a> </p>
                     </div>
                 </div>
@@ -510,7 +511,7 @@
                 const surname = escapeHtml(signer.surname);
                 const institution = escapeHtml(signer.institution);
                 const country = escapeHtml(signer.country);
-                const number_promoters = 11;
+                const number_promoters = 10;
                 
                 // First 8 rows get number "1" and special styling
                 const rowNumber = index < number_promoters ? 1 : index + 1;

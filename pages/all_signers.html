@@ -134,7 +134,7 @@
             const contentDiv = document.getElementById('content');
             const tableHeader = document.getElementById('table-header');
             const signersBody = document.getElementById('signers-body');
-            
+            const number_promoters = 10
             loadingDiv.style.display = 'none';
             contentDiv.style.display = 'block';
             
@@ -148,7 +148,7 @@
                 
                 data.signers.forEach((signer, index) => {
                     const row = document.createElement('tr');
-                    const rowNumber = index < 11 ? 1 : index + 1;
+                    const rowNumber = index < number_promoters ? 1 : index + 1;
                     
                     row.innerHTML = `
                         <td>${rowNumber}</td>
@@ -157,7 +157,7 @@
                         <td>${escapeHtml(signer.country)}</td>
                     `;
                     
-                    if (index < 11) {
+                    if (index < number_promoters) {
                         row.classList.add('promoter-row');
                     }
                     
