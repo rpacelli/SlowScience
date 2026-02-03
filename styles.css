@@ -455,6 +455,8 @@ header {
     text-align: center;
     padding: 40px;
     margin-right: 0; /* Reset margin since gap handles spacing */
+    background-color: transparent;
+    box-shadow: none; /* Remove shadow since background is transparent */
 }
 
 /* Adjust involved-card2 to take remaining 3/5 (60%) */
@@ -462,10 +464,10 @@ header {
     flex: 0 0 calc(60% - 30px); /* 3/5 = 60%, minus the gap */
     max-width: calc(60% - 30px);
     min-width: auto; /* Remove the fixed 600px */
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     background-color: white;
+    align-items: center;
+    text-align: center;
     padding: 30px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -484,16 +486,6 @@ header {
     transform: translateY(-5px);
 }
 
-.involved-card.sign-manifesto {
-    max-width: 400px;
-    flex-direction: row; /* Changed from column to row */
-    align-items: center; /* Center vertically */
-    justify-content: flex-start; /* Align items to the start */
-    min-height: 100px;
-    text-align: center; /* Changed from center */
-    gap: 40px; /* Space between button and text */
-    padding: 40px; /* More padding for better spacing */
-}
 
 .involved-card.sign-manifesto h3 {
     font-size: 1.2rem;
