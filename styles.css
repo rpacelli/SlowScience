@@ -47,6 +47,37 @@ a:hover {
     color: var(--primary-color);
 }
 
+.site-icon {
+  width: 40px;
+  height: auto; /* maintains aspect ratio */
+}
+.brother-icon {
+  width: 50px;
+  height: auto; /* maintains aspect ratio */
+}
+.footer-icon {
+  width: 20px;
+  height: auto; /* maintains aspect ratio */
+}
+.mg-icon {
+  width: 30px;
+  height: auto; /* maintains aspect ratio */
+}
+
+.small-drawing {
+  width: 80px;
+  height: auto; /* maintains aspect ratio */
+  margin: 10px;
+}
+
+.drawing-container {
+    display: flex;
+    align-items: center;     /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+    gap: 1rem;               /* Space between images */
+    margin-top: 1rem;        /* Add some space above the images */
+}
+
 .container {
     width: 90%;
     max-width: 1100px;
@@ -465,10 +496,15 @@ header {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 30px;
+    padding: 10px;
     background-color: white;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+}
+
+.involved-card2 h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0; /* Remove bottom margin since we're using flex row */
 }
 
 .involved-card {
