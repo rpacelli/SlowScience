@@ -118,7 +118,7 @@
 
 <script>
     // Replace this with your Google Apps Script Web App API URL write_institutions, active members
-    const INSTITUTION_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzfop4de_dDzhhVgIh5ZVjkA5nbEJUkVfhcx79B3ClsrDuHLa6tmTZmEjK_mKGUxuVA6Q/exec';
+    const INSTITUTION_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzXJo8t67AvfoXyhh0ad8fjpUDaOI4XWM18pYCKAHYD-SLmdV-6aFoBf6Fn2tEWiddibw/exec';
     const MAILING_LIST_URL = "https://script.google.com/macros/s/AKfycbxMontSna_MB0NdmlF_fnczvy8CwXSgunpWIsnA53Bp56OEeVf_6RDRgzPeXgnO-zD85w/exec"
     const ACTIVE_MEMBERS_URL = "https://script.google.com/macros/s/AKfycbzIPJBza3DVROL-mh3oul3Qc2X25V83sAYweYGmu-XWIo9Kw5MuJn19jfiSDJMf6daz/exec"
 
@@ -129,22 +129,6 @@
         
         // Wire up CAPTCHA refresh button
         document.getElementById('refreshCaptcha').addEventListener('click', displayCaptcha);
-        
-        // Toggle subscription email field
-        document.getElementById('declaration3').addEventListener('change', function() {
-            const emailContainer = document.getElementById('subscriptionEmailContainer');
-            if (this.checked) {
-                emailContainer.classList.add('active');
-                // Pre-fill with institutional email if empty
-                const subscriptionEmailField = document.getElementById('subscriptionEmail');
-                const institutionalEmail = document.getElementById('email').value;
-                if (!subscriptionEmailField.value.trim() && institutionalEmail) {
-                    subscriptionEmailField.value = institutionalEmail;
-                }
-            } else {
-                emailContainer.classList.remove('active');
-            }
-        });
     });
 
     // CAPTCHA functions
@@ -281,50 +265,6 @@
             
             if (result.success) {
                 // Show success message
-                if (document.getElementById('declaration3').checked) {
-                    try {
-                        // Determine which email to use
-                        let mailingListEmail = document.getElementById('subscriptionEmail').value.trim();
-
-                        // If separate email field is empty, use institutional email
-                        if (!mailingListEmail) {
-                            mailingListEmail = document.getElementById('email').value.trim();
-                        }
-
-                        if (mailingListEmail) {
-                            console.log('Adding to mailing list:', mailingListEmail);
-
-                            const mailingListData = new URLSearchParams();
-                            mailingListData.append('email', mailingListEmail);
-                            mailingListData.append('firstName', document.getElementById('firstName').value.trim());
-                            mailingListData.append('lastName', document.getElementById('lastName').value.trim());
-                            mailingListData.append('institution', document.getElementById('institutionName').value.trim()); // FIXED: was 'institution'
-                            mailingListData.append('country', document.getElementById('country').value);
-                            mailingListData.append('jobTitle', document.getElementById('jobTitle').value.trim());
-                            mailingListData.append('source', 'manifesto_signup');
-                            mailingListData.append('timestamp', new Date().toISOString());
-
-                            const mailingResponse = await fetch(ACTIVE_MEMBERS_URL, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                },
-                                body: mailingListData.toString()
-                            });
-
-                            const mailingResult = await mailingResponse.json();
-                            console.log('Mailing list response:', mailingResult);
-
-                            if (!mailingResult.success) {
-                                console.warn('Mailing list addition warning:', mailingResult.message);
-                            }
-                        }
-                    } catch (mailingError) {
-                        console.warn('Mailing list error (non-fatal):', mailingError);
-                        // Don't fail the main submission
-                    }
-                }
-
                 document.getElementById('successMessage').style.display = 'block';
             } else {
                 throw new Error(result.message || result.error || 'Submission failed');
@@ -392,14 +332,6 @@
             document.getElementById('emailError').textContent = 'Please enter a valid email address';
             isValid = false;
         }
-        
-        // Subscription email validation (if provided)
-        const subscriptionEmail = document.getElementById('subscriptionEmail').value;
-        if (subscriptionEmail && !emailRegex.test(subscriptionEmail)) {
-            document.getElementById('subscriptionEmailError').textContent = 'Please enter a valid email address';
-            document.getElementById('subscriptionEmailError').style.display = 'block';
-            isValid = false;
-        }
 
         // CAPTCHA validation
         const captchaInput = document.getElementById('captchaInput').value;
@@ -460,7 +392,6 @@
         testData.append('additionalInfo', 'Test info');
         testData.append('declaration1', 'true');
         testData.append('declaration2', 'true');
-        testData.append('declaration3', 'false');
         testData.append('type', 'institution');
         testData.append('source', 'test');
         
