@@ -110,19 +110,6 @@
                     <label for="declaration2">I give my consent to the Slow Science Movement to publicly display my organization's name and country and my name and job title on the Slow Science website.</label>
                 </div>
                 
-                <div class="checkbox-item">
-                    <input type="checkbox" id="declaration3" name="declaration3">
-                    <label for="declaration3">
-                        <div> <strong> I want to become an active member of the Slow Science Movement. </strong> <br> As an active member, you can have a direct say in our direction by attending meetings and voting on future initiatives. </div>
-                        <div class="subscription-email" id="subscriptionEmailContainer">
-                            <label for="subscriptionEmail" style="font-weight: normal; margin-top: 10px;">
-                                Email for future communication as active member (optional, different from above):
-                            </label>
-                            <input type="email" id="subscriptionEmail" name="subscriptionEmail" placeholder="Enter email">
-                            <div class="error-message" id="subscriptionEmailError">Please enter a valid email address</div>
-                        </div>
-                    </label>
-                </div>
             </div>
             
             <button type="submit" class="btn" id="submitBtn">Sign on Behalf of Institution</button>
@@ -131,7 +118,7 @@
 
 <script>
     // Replace this with your Google Apps Script Web App API URL write_institutions, active members
-    const INSTITUTION_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyYX6Y0kBGGOMbutCygXtMU7IHk2ct-l6I-Nq6HoRENw2VCDS6Eslkh5lOXR0BxnfT8UA/exec';
+    const INSTITUTION_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzfop4de_dDzhhVgIh5ZVjkA5nbEJUkVfhcx79B3ClsrDuHLa6tmTZmEjK_mKGUxuVA6Q/exec';
     const MAILING_LIST_URL = "https://script.google.com/macros/s/AKfycbxMontSna_MB0NdmlF_fnczvy8CwXSgunpWIsnA53Bp56OEeVf_6RDRgzPeXgnO-zD85w/exec"
     const ACTIVE_MEMBERS_URL = "https://script.google.com/macros/s/AKfycbzIPJBza3DVROL-mh3oul3Qc2X25V83sAYweYGmu-XWIo9Kw5MuJn19jfiSDJMf6daz/exec"
 
@@ -267,7 +254,6 @@
         formData.append('additionalInfo', document.getElementById('additionalInfo').value);
         formData.append('declaration1', document.getElementById('declaration1').checked.toString());
         formData.append('declaration2', document.getElementById('declaration2').checked.toString());
-        formData.append('declaration3', document.getElementById('declaration3').checked.toString());
         formData.append('timestamp', new Date().toISOString());
         formData.append('type', 'institution');
         formData.append('source', 'website_form');

@@ -65,6 +65,23 @@
                 <div class="error-message" id="emailError">Please enter a valid email address</div>
             </div>
             
+            <!-- New Communication Email Checkbox and Field -->
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="communicationOptIn" name="communicationOptIn">
+                    <label for="communicationOptIn">
+                        <strong>I would like to receive communication emails about the Slow Science Movement</strong> (news, updates, events)
+                        <div class="subscription-email" id="communicationEmailContainer">
+                            <input type="email" id="communicationEmail" name="communicationEmail" placeholder="Enter email for communications" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                            <div class="error-message" id="communicationEmailError" style="display: none;">Please enter a valid email address</div>
+                            <small style="display: block; margin-top: 5px; color: #666;">
+                                Specify if different from above.
+                            </small>
+                        </div>
+                </label>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label for="jobTitle" class="required">Job Title/Role</label>
                 <input type="text" id="jobTitle" name="jobTitle" required>
@@ -116,11 +133,11 @@
                     <label for="declaration3">
                         <div> <strong> I want to become an active member of the Slow Science Movement. </strong> <br> As an active member, you can have a direct say in our direction by attending meetings and voting on future initiatives. </div>
                         <div class="subscription-email" id="subscriptionEmailContainer">
-                            <label for="subscriptionEmail" style="font-weight: normal; margin-top: 10px;">
-                                Email for future communication as active member (optional, different from above):
-                            </label>
                             <input type="email" id="subscriptionEmail" name="subscriptionEmail" placeholder="Enter email">
                             <div class="error-message" id="subscriptionEmailError">Please enter a valid email address</div>
+                            <small style="display: block; margin-top: 5px; color: #666;">
+                                Specify if different from above.
+                            </small>
                         </div>
                     </label>
                 </div>
@@ -132,7 +149,7 @@
 
 <script>
     // IMPORTANT: Replace this with your deployed Google Apps Script URL for WRITING
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwAOAFVU41rFbAWpejWkyJ3DFW26sHszh1gqlRoGBFZvensL1fldD0y9Y9Lp7XoKI45/exec"; // write individuals API
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5Ff60MpnTDj9xxVwH3ouL6GZcT3aAxik49aJ415GKUamhGxWs9-9YBYo2wbHtz4y0/exec"; // write individuals API
     const MAILING_LIST_URL = "https://script.google.com/macros/s/AKfycbxMontSna_MB0NdmlF_fnczvy8CwXSgunpWIsnA53Bp56OEeVf_6RDRgzPeXgnO-zD85w/exec"; // You'll create this
     const ACTIVE_MEMBERS_URL = "https://script.google.com/macros/s/AKfycbzIPJBza3DVROL-mh3oul3Qc2X25V83sAYweYGmu-XWIo9Kw5MuJn19jfiSDJMf6daz/exec"
     
@@ -160,16 +177,39 @@
         return input.toLowerCase() === storedCaptcha.toLowerCase();
     }
 
-    // Toggle subscription email field
+    // Toggle communication email field
+    document.getElementById('communicationOptIn').addEventListener('change', function() {
+        //const emailContainer = document.getElementById('communicationEmailContainer');
+        const emailContainer = document.getElementById('communicationEmailContainer');
+        if (this.checked) {
+            emailContainer.style.display = 'block';
+            // Pre-fill with institutional email if empty
+            const communicationEmailField = document.getElementById('communicationEmail');
+            const institutionalEmail = document.getElementById('email').value;
+            if (!communicationEmailField.value.trim() && institutionalEmail) {
+                communicationEmailField.value = institutionalEmail;
+            }
+        } else {
+            emailContainer.style.display = 'none';
+        }
+    });
+
+    // Toggle subscription email field for active member
     document.getElementById('declaration3').addEventListener('change', function() {
         const emailContainer = document.getElementById('subscriptionEmailContainer');
         if (this.checked) {
             emailContainer.classList.add('active');
-            // Pre-fill with institutional email if empty
+            // Pre-fill with communication email if available, otherwise institutional email
             const subscriptionEmailField = document.getElementById('subscriptionEmail');
+            const communicationEmail = document.getElementById('communicationEmail').value;
             const institutionalEmail = document.getElementById('email').value;
-            if (!subscriptionEmailField.value.trim() && institutionalEmail) {
-                subscriptionEmailField.value = institutionalEmail;
+            
+            if (!subscriptionEmailField.value.trim()) {
+                if (communicationEmail) {
+                    subscriptionEmailField.value = communicationEmail;
+                } else if (institutionalEmail) {
+                    subscriptionEmailField.value = institutionalEmail;
+                }
             }
         } else {
             emailContainer.classList.remove('active');
@@ -207,6 +247,16 @@
         document.getElementById('signatureForm').style.display = 'none';
         document.getElementById('submitBtn').disabled = true;
 
+        // Determine communication email
+        let communicationEmail = '';
+        if (document.getElementById('communicationOptIn').checked) {
+            communicationEmail = document.getElementById('communicationEmail').value.trim();
+            // If no communication email provided, use institutional email
+            if (!communicationEmail) {
+                communicationEmail = document.getElementById('email').value.trim();
+            }
+        }
+
         // Collect form data for main signature
         const formData = new URLSearchParams();
         formData.append('firstName', document.getElementById('firstName').value.trim());
@@ -214,6 +264,8 @@
         formData.append('affiliationType', document.getElementById('affiliationType').value);
         formData.append('institution', document.getElementById('institution').value.trim());
         formData.append('email', document.getElementById('email').value.trim());
+        formData.append('communicationOptIn', document.getElementById('communicationOptIn').checked.toString());
+        formData.append('communications_email', communicationEmail); // Will be empty string if not checked
         formData.append('jobTitle', document.getElementById('jobTitle').value.trim());
         formData.append('country', document.getElementById('country').value);
         formData.append('declaration1', document.getElementById('declaration1').checked.toString());
@@ -244,22 +296,26 @@
                 throw new Error(signatureResult.message || signatureResult.error || 'Signature submission failed');
             }
 
-            // 2. If successful AND user wants mailing list subscription
+            // 2. If successful AND user wants mailing list subscription (active member)
             if (signatureResult.success && document.getElementById('declaration3').checked) {
                 try {
-                    // Determine which email to use
-                    let mailingListEmail = document.getElementById('subscriptionEmail').value.trim();
+                    // Determine which email to use for active member
+                    let activeMemberEmail = document.getElementById('subscriptionEmail').value.trim();
 
-                    // If separate email field is empty, use institutional email
-                    if (!mailingListEmail) {
-                        mailingListEmail = document.getElementById('email').value.trim();
+                    // If separate email field is empty, use communication email, then institutional email
+                    if (!activeMemberEmail) {
+                        if (communicationEmail) {
+                            activeMemberEmail = communicationEmail;
+                        } else {
+                            activeMemberEmail = document.getElementById('email').value.trim();
+                        }
                     }
 
-                    if (mailingListEmail) {
-                        console.log('Adding to mailing list:', mailingListEmail);
+                    if (activeMemberEmail) {
+                        console.log('Adding to active members list:', activeMemberEmail);
 
                         const mailingListData = new URLSearchParams();
-                        mailingListData.append('email', mailingListEmail);
+                        mailingListData.append('email', activeMemberEmail);
                         mailingListData.append('firstName', document.getElementById('firstName').value.trim());
                         mailingListData.append('lastName', document.getElementById('lastName').value.trim());
                         mailingListData.append('institution', document.getElementById('institution').value.trim());
@@ -277,14 +333,14 @@
                         });
 
                         const mailingResult = await mailingResponse.json();
-                        console.log('Mailing list response:', mailingResult);
+                        console.log('Active members response:', mailingResult);
 
                         if (!mailingResult.success) {
-                            console.warn('Mailing list addition warning:', mailingResult.message);
+                            console.warn('Active members addition warning:', mailingResult.message);
                         }
                     }
                 } catch (mailingError) {
-                    console.warn('Mailing list error (non-fatal):', mailingError);
+                    console.warn('Active members error (non-fatal):', mailingError);
                     // Don't fail the main submission
                 }
             }
@@ -297,6 +353,7 @@
             document.getElementById('signatureForm').reset();
             displayCaptcha(); // Generate new CAPTCHA
             document.getElementById('subscriptionEmailContainer').classList.remove('active');
+            document.getElementById('communicationEmailContainer').style.display = 'none';
 
         } catch (error) {
             console.error('Submission error:', error);
@@ -361,6 +418,14 @@
         if (!emailRegex.test(email)) {
             document.getElementById('emailError').textContent = 'Please enter a valid email address';
             document.getElementById('emailError').style.display = 'block';
+            isValid = false;
+        }
+
+        // Communication email validation (if provided)
+        const communicationEmail = document.getElementById('communicationEmail').value;
+        if (communicationEmail && !emailRegex.test(communicationEmail)) {
+            document.getElementById('communicationEmailError').textContent = 'Please enter a valid email address';
+            document.getElementById('communicationEmailError').style.display = 'block';
             isValid = false;
         }
 
