@@ -444,6 +444,7 @@ header {
 
 .btn-manifesto .btn-icon {
     margin-right: 10px;
+    margin-top: 20 px;
     font-size: 1.1rem;
 }
 
@@ -503,7 +504,7 @@ header {
 }
 
 .involved-card2 h3 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     margin-bottom: 0; /* Remove bottom margin since we're using flex row */
 }
 
